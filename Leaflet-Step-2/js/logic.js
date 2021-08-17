@@ -1,18 +1,16 @@
-//Quake URL
+// url
 var weekURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 var plateURL = 'https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json'
 
-//Get request for weekURL
+//get request for weekurl
 d3.json(weekURL, function(response){
   console.log(response)
   console.log(response.features[0].geometry.coordinates[2])
-  //Get request for plateURL
+  //get request for plateurl
   d3.json(plateURL, function(plateShapes){
     console.log(plateShapes)
-    //createFeatures(response.features);
   
-    //Function to grab data from each feature for pop up and map
-    //function createFeatures(data) {
+    //get data from each feature
     function onEachFeature(feature, layer) {
       layer.bindPopup("<h3>" + feature.properties.place + "</h3><hr><p><strong>Magnitude: </strong>" + 
         feature.properties.mag + "<br><strong>Depth: </strong>" +
@@ -20,7 +18,7 @@ d3.json(weekURL, function(response){
         new Date(feature.properties.time) + "</p>")
     }
 
-    //Function to define colors
+    //define colors
     function getColor(d) {
       return d > 90 ? 'Red':
         d >= 70 ? 'OrangeRed':
@@ -30,7 +28,7 @@ d3.json(weekURL, function(response){
         "Green"
     }  
 
-    //Function to create circle markers with size and color
+    //create circle markers
     function pointToLayer(feature, latlng) {
       var geojsonMarkerOptions = {
         fillColor: getColor(feature.geometry.coordinates[2]),
@@ -42,16 +40,16 @@ d3.json(weekURL, function(response){
       return L.circleMarker(latlng, geojsonMarkerOptions);
     };
 
-    //Add popups and markers based on quake lat/longs
+    //add popups and markers based
     var quakes = L.geoJSON(response.features, {
       onEachFeature: onEachFeature,
       pointToLayer: pointToLayer
     });
 
-    //Add tectonic plate lines
+    //add tectonic plate lines
     var tectPlates = L.geoJSON(plateShapes.features);
 
-    // Add darkmap tile layer
+    // add darkmap tile layer
     var darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
       tileSize: 512,
@@ -61,7 +59,7 @@ d3.json(weekURL, function(response){
       accessToken: API_KEY
     });
 
-    //Add satellitemap tile layer
+    //add satellitemap tile layer
     var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
       tileSize: 512,
@@ -71,7 +69,7 @@ d3.json(weekURL, function(response){
       accessToken: API_KEY
     });
 
-    //Add outdoors tile layer
+    //add outdoors tile layer
     var outdoormap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
       attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
       tileSize: 512,
@@ -81,32 +79,32 @@ d3.json(weekURL, function(response){
       accessToken: API_KEY
     });
 
-    //Create baseMaps for layer control
+    //create baseMaps
     var baseMaps = {
       "Dark": darkmap,
       "Outdoor": outdoormap,
       "Satellite": satellitemap
     };
 
-    //Create overlayMaps for layer control
+    //create overlayMaps
     var overlayMaps = {
       "Earthquakes": quakes,
       "Plates": tectPlates
     };
   
-    //Create inital map object with default layers
+    //create inital map object with default layers
     var myMap = L.map("map", {
       center: [20, 0],
       zoom: 3,
       layers: [outdoormap, quakes, tectPlates]
     });
 
-    //Add layer control
+    //add layer control
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(myMap);
 
-    //Set-up Legend
+    //legend
     var legend = L.control({ position: "bottomright"});
       legend.onAdd = function() {
         var div = L.DomUtil.create("div", "info legend");

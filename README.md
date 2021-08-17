@@ -16,7 +16,7 @@ Each marker includes a popup when selected that provides the location, depth, ma
 * Leaflet
 
 ## Deployment
-View the deployed web page here!
+View the deployed web page here! https://kstrange89.github.io/Leaflet-Challenge/
 
 ## Sources
 * https://github.com/fraxen/tectonicplates

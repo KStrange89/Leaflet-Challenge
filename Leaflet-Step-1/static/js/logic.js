@@ -1,14 +1,14 @@
 //Quake URL
 var weekURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
-//Get request on baseURL
+//get request on baseURL
 d3.json(weekURL, function(response){
   console.log(response)
   createFeatures(response.features);
   console.log(response.features[0].geometry.coordinates[2])
 });
 
-//Function to grab data from each feature for pop up and map
+//grab data from each feature for pop up and map
 function createFeatures(data) {
   
   function onEachFeature(feature, layer) {
@@ -47,8 +47,8 @@ function createFeatures(data) {
 };
 
 function createMap(quakes) {
-  // Adding a tile layer (the background map image) to our map
-  // We use the addTo method to add objects to our map
+  // add a tile layer
+  // use the addTo method
 
   var outdoormap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -59,9 +59,9 @@ function createMap(quakes) {
     accessToken: API_KEY
   });
   
-  // Creating our initial map object
-  // We set the longitude, latitude, and the starting zoom level
-  // This gets inserted into the div with an id of 'map'
+  // create initial map object
+  // set the longitude, latitude, and the starting zoom level
+  // insert into the div
   var myMap = L.map("map", {
     center: [40, -90],
     zoom: 3,
@@ -76,7 +76,7 @@ function createMap(quakes) {
       d >= 10 ? 'LawnGreen':
       "Green"
   }  
-  //Set-up Legend
+  //legend
   var legend = L.control({ position: "bottomright"});
     legend.onAdd = function() {
       var div = L.DomUtil.create("div", "info legend");
